@@ -1,0 +1,35 @@
+{
+  "1": {
+    "slave_id": 1,
+    "registeraddress": 0,
+    "number_of_registers": 10,
+    "functioncode": 3,
+    "baudrate": 9600,
+    "bytesize": 8,
+    "parity": "NONE",
+    "stopbits": 1,
+    "timeout": 0.5
+  },
+  "2": {
+    "slave_id": 2,
+    "registeraddress": 0,
+    "number_of_registers": 2,
+    "functioncode": 3,
+    "baudrate": 9600,
+    "bytesize": 8,
+    "parity": "NONE",
+    "stopbits": 1,
+    "timeout": 0.5
+  },
+  "3": {
+    "slave_id": 3,
+    "registeraddress": 5,
+    "number_of_registers": 4,
+    "functioncode": 3,
+    "baudrate": 9600,
+    "bytesize": 8,
+    "parity": "NONE",
+    "stopbits": 1,
+    "timeout": 0.5
+  }
+}
