@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import QDialog
 from settings import FUNCTION_LIST_WRITE
 
 
-class Ui_WriteRegDialog(QDialog):
+class Ui_WriteRegDialog_4(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -108,20 +108,20 @@ class Ui_WriteRegDialog(QDialog):
         self.comboFunctionCode.setCurrentIndex(0)
 
     def set_write_params(self):
-        self.parent.slave1.write_reg_params['slave_id'] = int(self.SlaveID.toPlainText())
-        self.parent.slave1.write_reg_params['registeraddress'] = int(self.Address.toPlainText())
-        self.parent.slave1.write_reg_params['value'] = float(self.Value.toPlainText())
-        self.parent.slave1.write_reg_params['number_of_decimals'] = int(self.Decimals.toPlainText())
-        self.parent.slave1.write_reg_params['signed'] = bool(self.checkBoxSigned.isChecked())
+        self.parent.slave4.write_reg_params['slave_id'] = int(self.SlaveID.toPlainText())
+        self.parent.slave4.write_reg_params['registeraddress'] = int(self.Address.toPlainText())
+        self.parent.slave4.write_reg_params['value'] = float(self.Value.toPlainText())
+        self.parent.slave4.write_reg_params['number_of_decimals'] = int(self.Decimals.toPlainText())
+        self.parent.slave4.write_reg_params['signed'] = bool(self.checkBoxSigned.isChecked())
 
         selected_func = self.comboFunctionCode.itemText(
             self.comboFunctionCode.currentIndex()).split(" ")[0]
-        self.parent.slave1.write_reg_params['functioncode'] = int(selected_func)
+        self.parent.slave4.write_reg_params['functioncode'] = int(selected_func)
 
         self.write()
 
     def write(self):
-        self.parent.write_register()
+        self.parent.write_register_4()
 
     def retranslateUi(self, WriteRegDialog):
         _translate = QtCore.QCoreApplication.translate

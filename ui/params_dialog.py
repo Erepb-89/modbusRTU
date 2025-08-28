@@ -21,11 +21,11 @@ class Ui_ParamsDialog(QDialog):
 
         self.parent = parent
 
-        self.setFixedSize(400, 250)
+        self.setFixedSize(400, 180)
         self.setWindowTitle('Parameters')
 
         self.buttonBox = QtWidgets.QDialogButtonBox(self)
-        self.buttonBox.setGeometry(QtCore.QRect(30, 210, 341, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(30, 140, 341, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
@@ -107,7 +107,7 @@ class Ui_ParamsDialog(QDialog):
 
     def retranslateUi(self, ParamsDialog):
         _translate = QtCore.QCoreApplication.translate
-        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Dialog"))
+        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Slave 1 parameters"))
         self.label_7.setText(_translate("ParamsDialog", "Func Code"))
         self.label.setText(_translate("ParamsDialog", "Slave ID"))
         self.label_6.setText(_translate("ParamsDialog", "Quantity"))
