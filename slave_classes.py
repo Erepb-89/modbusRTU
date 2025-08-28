@@ -31,6 +31,7 @@ class SlaveEncoder(ParentSlave):
         self.data = []
 
         try:
+            # self.sensor = minimalmodbus.Instrument('/dev/ttyUSB0', self.mb_address) # for Linux
             self.sensor = minimalmodbus.Instrument('COM6', self.mb_address)
         except FileNotFoundError as err:
             print(err)

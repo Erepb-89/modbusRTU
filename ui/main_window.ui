@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1062</width>
-    <height>228</height>
+    <width>991</width>
+    <height>416</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <widget class="QPushButton" name="pushButtonChooseJSON">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>830</x>
       <y>20</y>
       <width>141</width>
       <height>31</height>
@@ -30,7 +30,7 @@
    <widget class="QLabel" name="LabelMessage">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>830</x>
       <y>60</y>
       <width>141</width>
       <height>61</height>
@@ -104,7 +104,7 @@
    <widget class="QPushButton" name="pushButtonLoadParams">
     <property name="geometry">
      <rect>
-      <x>450</x>
+      <x>830</x>
       <y>130</y>
       <width>140</width>
       <height>31</height>
@@ -130,7 +130,7 @@
    <widget class="QPushButton" name="pushButtonSlave2Settings">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>430</x>
       <y>20</y>
       <width>111</width>
       <height>31</height>
@@ -143,7 +143,7 @@
    <widget class="QLabel" name="LabelMessage_2">
     <property name="geometry">
      <rect>
-      <x>1030</x>
+      <x>850</x>
       <y>70</y>
       <width>131</width>
       <height>51</height>
@@ -162,7 +162,7 @@
    <widget class="QPushButton" name="pushButtonStopPolling_2">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>430</x>
       <y>130</y>
       <width>111</width>
       <height>31</height>
@@ -175,7 +175,7 @@
    <widget class="QListView" name="ReadRegisters_2">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>560</x>
       <y>20</y>
       <width>121</width>
       <height>141</height>
@@ -185,7 +185,7 @@
    <widget class="QPushButton" name="pushButtonStartPolling_2">
     <property name="geometry">
      <rect>
-      <x>610</x>
+      <x>430</x>
       <y>90</y>
       <width>111</width>
       <height>31</height>
@@ -198,7 +198,7 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>560</x>
       <y>0</y>
       <width>121</width>
       <height>21</height>
@@ -230,7 +230,7 @@
    <widget class="QPushButton" name="pushButtonWriteReg_2">
     <property name="geometry">
      <rect>
-      <x>880</x>
+      <x>700</x>
       <y>20</y>
       <width>111</width>
       <height>31</height>
@@ -240,13 +240,175 @@
      <string>Write Register</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>190</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Read registers</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QListView" name="ReadRegisters_3">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>210</y>
+      <width>121</width>
+      <height>141</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopPolling_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>320</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop Polling</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStartPolling_3">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>280</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Polling</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSlave3Settings">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>210</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Slave3 Params</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonWriteReg_3">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>210</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Write Register</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStartPolling_4">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>280</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Polling</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonSlave4Settings">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>210</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Slave4 Params</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonWriteReg_4">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>210</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Write Register</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonStopPolling_4">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>320</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop Polling</string>
+    </property>
+   </widget>
+   <widget class="QListView" name="ReadRegisters_4">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>210</y>
+      <width>121</width>
+      <height>141</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>190</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Read registers</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1062</width>
+     <width>991</width>
      <height>26</height>
     </rect>
    </property>

@@ -15,7 +15,7 @@ from settings import FUNCTION_LIST_READ
 from slave_classes import SlaveEncoder
 
 
-class Ui_ParamsDialog_2(QDialog):
+class Ui_ParamsDialog_4(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
@@ -79,21 +79,21 @@ class Ui_ParamsDialog_2(QDialog):
         self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.accepted.connect(self.accept)
 
-        self.StartRegister.setText(str(self.parent.slave2.params["registeraddress"]))
-        self.SlaveID.setText(str(self.parent.slave2.params["slave_id"]))
-        self.Quantity.setText(str(self.parent.slave2.params["number_of_registers"]))
+        self.StartRegister.setText(str(self.parent.slave4.params["registeraddress"]))
+        self.SlaveID.setText(str(self.parent.slave4.params["slave_id"]))
+        self.Quantity.setText(str(self.parent.slave4.params["number_of_registers"]))
 
         self.update_checkbox()
 
     def set_params(self):
-        self.parent.slave2.params['slave_id'] = int(self.SlaveID.toPlainText())
-        self.parent.slave2.params['registeraddress'] = int(self.StartRegister.toPlainText())
-        self.parent.slave2.params['number_of_registers'] = int(self.Quantity.toPlainText())
+        self.parent.slave4.params['slave_id'] = int(self.SlaveID.toPlainText())
+        self.parent.slave4.params['registeraddress'] = int(self.StartRegister.toPlainText())
+        self.parent.slave4.params['number_of_registers'] = int(self.Quantity.toPlainText())
 
         selected_func = self.comboFunctionCode.currentIndex() + 1
-        self.parent.slave2.params['functioncode'] = selected_func
+        self.parent.slave4.params['functioncode'] = selected_func
 
-        for key, val in self.parent.slave2.params.items():
+        for key, val in self.parent.slave4.params.items():
             print(key, val)
         print()
 
@@ -107,7 +107,7 @@ class Ui_ParamsDialog_2(QDialog):
 
     def retranslateUi(self, ParamsDialog):
         _translate = QtCore.QCoreApplication.translate
-        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Slave 2 parameters"))
+        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Slave 4 parameters"))
         self.label_7.setText(_translate("ParamsDialog", "Func Code"))
         self.label.setText(_translate("ParamsDialog", "Slave ID"))
         self.label_6.setText(_translate("ParamsDialog", "Quantity"))
