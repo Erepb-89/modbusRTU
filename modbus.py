@@ -1,6 +1,6 @@
 import os
 import sys
-from threading import Thread, Event
+from threading import Thread, Event, RLock
 from typing import List
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -17,6 +17,8 @@ from ui.write_single_dialog import Ui_WriteRegDialog
 from ui.write_single_dialog_2 import Ui_WriteRegDialog_2
 from ui.write_single_dialog_3 import Ui_WriteRegDialog_3
 from ui.write_single_dialog_4 import Ui_WriteRegDialog_4
+
+rlock = RLock()
 
 
 class MainWindow(QMainWindow):
@@ -241,10 +243,11 @@ class MainWindow(QMainWindow):
         # while self.attempts > 0 and self.running:
         while self.running_read_1.is_set():
             try:
-                self.slave1.read()
-                # self.attempts -= 1
-                self.read_registers_list_update()
-                sleep(1)
+                with rlock:
+                    self.slave1.read()
+                    # self.attempts -= 1
+                    self.read_registers_list_update()
+                    sleep(1)
             except Exception as err:
                 self.ui.LabelMessage.setText(str(err))
                 print(err)
@@ -254,17 +257,42 @@ class MainWindow(QMainWindow):
     def reading_thread_2(self):
         while self.running_read_2.is_set():
             try:
-                self.slave2.read()
-                self.read_registers_list_update_2()
-                sleep(1)
-            except AttributeError as err:
-                self.ui.LabelMessage.setText(str(err))
-                self.running_read_2.clear()
-
+                with rlock:
+                    self.slave2.read()
+                    self.read_registers_list_update_2()
+                    sleep(1)
             except Exception as err:
                 self.ui.LabelMessage.setText(str(err))
                 print(err)
                 self.stop_polling_2()
+
+    def reading_thread_3(self):
+        while self.running_read_3.is_set():
+            try:
+                with rlock:
+                    self.slave3.read()
+                    self.read_registers_list_update_3()
+                    sleep(1)
+            except Exception as err:
+                self.ui.LabelMessage.setText(str(err))
+                print(err)
+                self.stop_polling_3()
+
+    def reading_thread_4(self):
+        while self.running_read_4.is_set():
+            try:
+                with rlock:
+                    self.slave4.read()
+                    self.read_registers_list_update_4()
+                    sleep(1)
+            except AttributeError as err:
+                self.ui.LabelMessage.setText(str(err))
+                self.running_read_4.clear()
+
+            except Exception as err:
+                self.ui.LabelMessage.setText(str(err))
+                print(err)
+                self.stop_polling_4()
 
     def stop_polling_1(self):
         self.ui.pushButtonStartPolling.setEnabled(True)
