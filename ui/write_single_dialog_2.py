@@ -91,7 +91,7 @@ class Ui_WriteRegDialog_2(QDialog):
         self.buttonBox.accepted.connect(self.accept)
 
         self.Address.setText("1")
-        self.SlaveID.setText(str(self.parent.slave1.params["slave_id"]))
+        self.SlaveID.setText(str(self.parent.slave2.params["slave_id"]))
         self.Value.setText("1")
         self.Decimals.setText("0")
 
