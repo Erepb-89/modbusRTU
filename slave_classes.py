@@ -1,6 +1,7 @@
 import json
 
 import minimalmodbus
+import pymodbus
 
 from settings import PARITY
 
@@ -32,8 +33,9 @@ class SlaveEncoder(ParentSlave):
         self.err = ''
 
         try:
-            # self.sensor = minimalmodbus.Instrument('/dev/ttyUSB0', self.mb_address) # for Linux
-            self.sensor = minimalmodbus.Instrument('COM6', self.mb_address)
+            self.sensor = pymodbus
+            self.sensor = minimalmodbus.Instrument('/dev/ttyUSB0', self.mb_address) # for Linux
+            # self.sensor = minimalmodbus.Instrument('COM6', self.mb_address)
         except FileNotFoundError as err:
             print(err)
             self.err = str(err)
@@ -59,6 +61,7 @@ class SlaveEncoder(ParentSlave):
             print(f"Произошла ошибка: {err}")
 
     def get_actual_params(self):
+        self.sensor.serial.registeraddress = self.params.get('registeraddress')
         self.sensor.serial.baudrate = self.params.get('baudrate')
         self.sensor.serial.bytesize = self.params.get('bytesize')
         self.sensor.serial.parity = PARITY.get('NONE')
@@ -70,9 +73,9 @@ class SlaveEncoder(ParentSlave):
         self.get_actual_params()
 
         self.data = self.sensor.read_registers(
-            registeraddress=self.params.get('registeraddress'),
-            number_of_registers=self.params.get('number_of_registers'),
-            functioncode=self.params.get('functioncode'))
+            registeraddress=self.params['registeraddress'],
+            number_of_registers=self.params['number_of_registers'],
+            functioncode=self.params['functioncode'])
         print(self.data)
 
     def write(self):
