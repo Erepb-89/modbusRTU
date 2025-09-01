@@ -10,13 +10,13 @@ class VisualModel:
         self.running_read = Event()
         self.connect_port()
 
-        try:
-            self.set_standard_settings(self.slave1)
-            self.set_standard_settings(self.slave2)
-            self.set_standard_settings(self.slave3)
-            self.set_standard_settings(self.slave4)
-        except Exception as err:
-            print(err)
+        # try:
+        self.set_standard_settings(self.slave1, 1)
+        self.set_standard_settings(self.slave2, 2)
+        self.set_standard_settings(self.slave3, 3)
+        self.set_standard_settings(self.slave4, 4)
+        # except Exception as err:
+        #     print(err)
 
     def connect_port(self):
         self.slave1 = SlaveEncoder(1)
@@ -28,12 +28,8 @@ class VisualModel:
         self.slave1.load_json_params(path)
         self.slave2.load_json_params(path)
 
-    def set_standard_settings(self, slave):
-        self.slave1.params["slave_id"] = 1
-        self.slave2.params["slave_id"] = 2
-        self.slave3.params["slave_id"] = 3
-        self.slave4.params["slave_id"] = 4
-
+    def set_standard_settings(self, slave, slave_id):
+        slave.params["slave_id"] = slave_id
         slave.params["registeraddress"] = 0
         slave.params["number_of_registers"] = 10
         slave.params["functioncode"] = 3
@@ -88,4 +84,4 @@ class VisualModel:
         print('Чтение завершено')
 
 
-v_model = VisualModel()
+# v_model = VisualModel()

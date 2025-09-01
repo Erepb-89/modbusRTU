@@ -1,5 +1,6 @@
 import os
 import sys
+from threading import Thread
 from typing import List
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
@@ -14,7 +15,7 @@ from ui.write_single_dialog import Ui_WriteRegDialog
 from ui.write_single_dialog_2 import Ui_WriteRegDialog_2
 from ui.write_single_dialog_3 import Ui_WriteRegDialog_3
 from ui.write_single_dialog_4 import Ui_WriteRegDialog_4
-from visual_model import v_model
+from visual_model import VisualModel
 
 
 class MainWindow(QMainWindow):
@@ -26,7 +27,8 @@ class MainWindow(QMainWindow):
         super().__init__()
         # основные переменные
         self.name = 'ClientMainWindow'
-        v_model.connect_port()
+        self.v_model = VisualModel()
+        # self.v_model.connect_port()
         self.ui_dict = {}
 
         self.InitUI()
@@ -36,7 +38,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.pushButtonConnect.clicked.connect(v_model.connect_port)
+        self.ui.pushButtonConnect.clicked.connect(self.v_model.connect_port)
 
         self.ui.pushButtonStartPolling.clicked.connect(self.start_polling)
         self.ui.pushButtonStopPolling.clicked.connect(self.stop_polling)
@@ -64,10 +66,10 @@ class MainWindow(QMainWindow):
             "slave4": self.ui.pushButtonWriteReg_4,
         }
 
-        self.check_slave_availability(v_model.slave1, "slave1")
-        self.check_slave_availability(v_model.slave2, "slave2")
-        self.check_slave_availability(v_model.slave3, "slave3")
-        self.check_slave_availability(v_model.slave4, "slave4")
+        self.check_slave_availability(self.v_model.slave1, "slave1")
+        self.check_slave_availability(self.v_model.slave2, "slave2")
+        self.check_slave_availability(self.v_model.slave3, "slave3")
+        self.check_slave_availability(self.v_model.slave4, "slave4")
 
         self.show()
 
@@ -82,7 +84,7 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event) -> None:
         """Закрытие всех окон по выходу из главного"""
-        v_model.running_read.clear()
+        self.v_model.running_read.clear()
         os.sys.exit(0)
 
     def open_json_dialog(self):
@@ -102,7 +104,7 @@ class MainWindow(QMainWindow):
             self.ui.LabelMessage_5.setText("Выберите JSON файл")
 
     def load_json_params(self):
-        v_model.load_json_params(self.json_path)
+        self.v_model.load_json_params(self.json_path)
 
         self.ui.pushButtonStartPolling.setEnabled(True)
         self.ui.LabelMessage_5.setText("Параметры загружены")
@@ -152,11 +154,16 @@ class MainWindow(QMainWindow):
         dialog.exec()
 
     def start_polling(self):
-        v_model.start_polling()
+        self.v_model.start_polling()
 
         self.ui.pushButtonStartPolling.setEnabled(False)
         self.ui.pushButtonStopPolling.setEnabled(True)
 
+        # ui_items_list.model().layoutChanged.emit()
+        # self.ui.ReadRegisters_2.model().dataChanged.connect(self.on_data_changed)
+        self.on_data_changed()
+
+    def on_data_changed(self):
         self.read_registers_list_update()
         self.read_registers_list_update_2()
         self.read_registers_list_update_3()
@@ -164,7 +171,7 @@ class MainWindow(QMainWindow):
 
     def write_register(self):
         try:
-            v_model.slave1.write()
+            self.v_model.slave1.write()
 
             self.ui.LabelMessage.setText("Запись в slave 1 успешно произведена")
         except Exception as err:
@@ -172,7 +179,7 @@ class MainWindow(QMainWindow):
 
     def write_register_2(self):
         try:
-            v_model.slave2.write()
+            self.v_model.slave2.write()
 
             self.ui.LabelMessage_2.setText("Запись в slave 2 успешно произведена")
         except Exception as err:
@@ -180,7 +187,7 @@ class MainWindow(QMainWindow):
 
     def write_register_3(self):
         try:
-            v_model.slave3.write()
+            self.v_model.slave3.write()
 
             self.ui.LabelMessage_3.setText("Запись в slave 3 успешно произведена")
         except Exception as err:
@@ -188,18 +195,20 @@ class MainWindow(QMainWindow):
 
     def write_register_4(self):
         try:
-            v_model.slave4.write()
+            self.v_model.slave4.write()
 
             self.ui.LabelMessage_4.setText("Запись в slave 4 успешно произведена")
         except Exception as err:
             self.ui.LabelMessage_4.setText(str(err))
 
     def stop_polling(self):
+        self.v_model.stop_polling()
+
         self.ui.pushButtonStartPolling.setEnabled(True)
         self.ui.pushButtonStopPolling.setEnabled(False)
 
-    @staticmethod
-    def universal_list_update(regs_list: List,
+    def universal_list_update(self,
+                              regs_list: List,
                               ui_items_list: QListView) -> None:
         """Метод обновляющий список чего-нибудь."""
         items_model = QStandardItemModel()
@@ -212,25 +221,25 @@ class MainWindow(QMainWindow):
     def read_registers_list_update(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            v_model.slave1.data,
+            self.v_model.slave1.data,
             self.ui.ReadRegisters)
 
     def read_registers_list_update_2(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            v_model.slave2.data,
+            self.v_model.slave2.data,
             self.ui.ReadRegisters_2)
 
     def read_registers_list_update_3(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            v_model.slave3.data,
+            self.v_model.slave3.data,
             self.ui.ReadRegisters_3)
 
     def read_registers_list_update_4(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            v_model.slave4.data,
+            self.v_model.slave4.data,
             self.ui.ReadRegisters_4)
 
 
