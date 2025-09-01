@@ -1,5 +1,7 @@
 import minimalmodbus
 
+SCAN_RATE = 0.2
+
 PARITY = {
     "NONE": minimalmodbus.serial.PARITY_NONE,
     "ODD": minimalmodbus.serial.PARITY_ODD,

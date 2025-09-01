@@ -30,10 +30,10 @@
    <widget class="QLabel" name="LabelMessage">
     <property name="geometry">
      <rect>
-      <x>830</x>
+      <x>300</x>
       <y>60</y>
-      <width>141</width>
-      <height>61</height>
+      <width>111</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="text">
@@ -105,7 +105,7 @@
     <property name="geometry">
      <rect>
       <x>830</x>
-      <y>130</y>
+      <y>60</y>
       <width>140</width>
       <height>31</height>
      </rect>
@@ -143,10 +143,10 @@
    <widget class="QLabel" name="LabelMessage_2">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>70</y>
-      <width>131</width>
-      <height>51</height>
+      <x>700</x>
+      <y>60</y>
+      <width>111</width>
+      <height>101</height>
      </rect>
     </property>
     <property name="text">
@@ -159,19 +159,6 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonStopPolling_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>130</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stop Polling</string>
-    </property>
-   </widget>
    <widget class="QListView" name="ReadRegisters_2">
     <property name="geometry">
      <rect>
@@ -180,19 +167,6 @@
       <width>121</width>
       <height>141</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonStartPolling_2">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>90</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start Polling</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_6">
@@ -269,32 +243,6 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonStopPolling_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>320</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stop Polling</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonStartPolling_3">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>280</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start Polling</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButtonSlave3Settings">
     <property name="geometry">
      <rect>
@@ -321,19 +269,6 @@
      <string>Write Register</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButtonStartPolling_4">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>280</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start Polling</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButtonSlave4Settings">
     <property name="geometry">
      <rect>
@@ -358,19 +293,6 @@
     </property>
     <property name="text">
      <string>Write Register</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButtonStopPolling_4">
-    <property name="geometry">
-     <rect>
-      <x>430</x>
-      <y>320</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stop Polling</string>
     </property>
    </widget>
    <widget class="QListView" name="ReadRegisters_4">
@@ -400,6 +322,76 @@
     </property>
     <property name="wordWrap">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelMessage_4">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>250</y>
+      <width>111</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelMessage_3">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>250</y>
+      <width>111</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="LabelMessage_5">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>100</y>
+      <width>141</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonConnect">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>210</y>
+      <width>140</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Установить соед-е</string>
     </property>
    </widget>
   </widget>

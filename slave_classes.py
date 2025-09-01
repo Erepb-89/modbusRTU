@@ -29,14 +29,17 @@ class SlaveEncoder(ParentSlave):
         self.params = {}
         self.write_reg_params = {}
         self.data = []
+        self.err = ''
 
         try:
             # self.sensor = minimalmodbus.Instrument('/dev/ttyUSB0', self.mb_address) # for Linux
             self.sensor = minimalmodbus.Instrument('COM6', self.mb_address)
         except FileNotFoundError as err:
             print(err)
+            self.err = str(err)
         except Exception as err:
             print(err)
+            self.err = str(err)
 
     def load_json_params(self, file_path):
         try:
