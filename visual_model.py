@@ -8,17 +8,17 @@ from slave_classes import SlaveEncoder
 class VisualModel:
     def __init__(self):
         self.running_read = Event()
-        self.connect_port()
+        self.create_slaves()
 
         # try:
-        self.set_standard_settings(self.slave1, 1)
-        self.set_standard_settings(self.slave2, 2)
-        self.set_standard_settings(self.slave3, 3)
-        self.set_standard_settings(self.slave4, 4)
+        self.set_default_params(self.slave1, 1)
+        self.set_default_params(self.slave2, 2)
+        self.set_default_params(self.slave3, 3)
+        self.set_default_params(self.slave4, 4)
         # except Exception as err:
         #     print(err)
 
-    def connect_port(self):
+    def create_slaves(self):
         self.slave1 = SlaveEncoder(1)
         self.slave2 = SlaveEncoder(2)
         self.slave3 = SlaveEncoder(3)
@@ -28,7 +28,7 @@ class VisualModel:
         self.slave1.load_json_params(path)
         self.slave2.load_json_params(path)
 
-    def set_standard_settings(self, slave, slave_id):
+    def set_default_params(self, slave: SlaveEncoder, slave_id: int):
         slave.params["slave_id"] = slave_id
         slave.params["registeraddress"] = 0
         slave.params["number_of_registers"] = 10
