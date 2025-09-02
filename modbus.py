@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.pushButtonConnect.clicked.connect(self.v_model.connect_port)
+        self.ui.pushButtonConnect.clicked.connect(self.v_model.create_slaves)
 
         self.ui.pushButtonStartPolling.clicked.connect(self.start_polling)
         self.ui.pushButtonStopPolling.clicked.connect(self.stop_polling)
