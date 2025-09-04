@@ -12,30 +12,24 @@ from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QDialog
 
 from settings import FUNCTION_LIST_WRITE
+from visual_model import v_model
 
 
 class Ui_WriteRegDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, slave, parent=None):
         super().__init__(parent)
 
         self.parent = parent
+        self.slave = slave
 
-        self.setFixedSize(400, 250)
-        self.setWindowTitle('Parameters')
+        self.setFixedSize(340, 180)
+        self.setWindowTitle('Write single register')
 
         self.buttonBox = QtWidgets.QDialogButtonBox(self)
-        self.buttonBox.setGeometry(QtCore.QRect(90, 180, 231, 32))
+        self.buttonBox.setGeometry(QtCore.QRect(90, 140, 231, 32))
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.label_7 = QtWidgets.QLabel(self)
-        self.label_7.setGeometry(QtCore.QRect(30, 150, 61, 21))
-        self.label_7.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-        self.label_7.setWordWrap(True)
-        self.label_7.setObjectName("label_7")
-        self.comboFunctionCode = QtWidgets.QComboBox(self)
-        self.comboFunctionCode.setGeometry(QtCore.QRect(100, 150, 221, 22))
-        self.comboFunctionCode.setObjectName("comboFunctionCode")
         self.SlaveID = QtWidgets.QTextEdit(self)
         self.SlaveID.setGeometry(QtCore.QRect(100, 20, 61, 21))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -71,15 +65,6 @@ class Ui_WriteRegDialog(QDialog):
         self.checkBoxSigned = QtWidgets.QCheckBox(self)
         self.checkBoxSigned.setGeometry(QtCore.QRect(240, 80, 81, 20))
         self.checkBoxSigned.setObjectName("checkBoxSigned")
-        self.label_8 = QtWidgets.QLabel(self)
-        self.label_8.setGeometry(QtCore.QRect(30, 110, 61, 21))
-        self.label_8.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-        self.label_8.setWordWrap(True)
-        self.label_8.setObjectName("label_8")
-        self.Decimals = QtWidgets.QTextEdit(self)
-        self.Decimals.setGeometry(QtCore.QRect(100, 110, 61, 21))
-        self.Decimals.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.Decimals.setObjectName("Decimals")
 
         self.retranslateUi(self)
         self.buttonBox.accepted.connect(self.accept)  # type: ignore
@@ -91,44 +76,23 @@ class Ui_WriteRegDialog(QDialog):
         self.buttonBox.accepted.connect(self.accept)
 
         self.Address.setText("1")
-        self.SlaveID.setText(str(self.parent.slave1.params["slave_id"]))
+        self.SlaveID.setText(str(self.slave.params["slave_id"]))
         self.Value.setText("1")
-        self.Decimals.setText("0")
 
         self.checkBoxSigned.setChecked(True)
 
-        self.update_combobox()
-
-    def update_combobox(self) -> None:
-        """Обновление комбо-бокса"""
-        self.parent.universal_list_update(
-            FUNCTION_LIST_WRITE,
-            self.comboFunctionCode)
-
-        self.comboFunctionCode.setCurrentIndex(0)
-
     def set_write_params(self):
-        self.parent.slave1.write_reg_params['slave_id'] = int(self.SlaveID.toPlainText())
-        self.parent.slave1.write_reg_params['registeraddress'] = int(self.Address.toPlainText())
-        self.parent.slave1.write_reg_params['value'] = float(self.Value.toPlainText())
-        self.parent.slave1.write_reg_params['number_of_decimals'] = int(self.Decimals.toPlainText())
-        self.parent.slave1.write_reg_params['signed'] = bool(self.checkBoxSigned.isChecked())
+        self.slave.write_reg_params['slave_id'] = int(self.SlaveID.toPlainText())
+        self.slave.write_reg_params['registeraddress'] = int(self.Address.toPlainText())
+        self.slave.write_reg_params['value'] = float(self.Value.toPlainText())
+        self.slave.write_reg_params['signed'] = bool(self.checkBoxSigned.isChecked())
 
-        selected_func = self.comboFunctionCode.itemText(
-            self.comboFunctionCode.currentIndex()).split(" ")[0]
-        self.parent.slave1.write_reg_params['functioncode'] = int(selected_func)
-
-        self.write()
-
-    def write(self):
-        self.parent.write_register()
+        self.slave.write(self.parent.ui.LabelMessage_5)
 
     def retranslateUi(self, WriteRegDialog):
         _translate = QtCore.QCoreApplication.translate
         WriteRegDialog.setWindowTitle(_translate("WriteRegDialog", "Write single register"))
-        self.label_7.setText(_translate("WriteRegDialog", "Func Code"))
         self.label.setText(_translate("WriteRegDialog", "Slave ID"))
         self.label_6.setText(_translate("WriteRegDialog", "Value"))
         self.label_5.setText(_translate("WriteRegDialog", "Address"))
-        self.label_8.setText(_translate("WriteRegDialog", "Decimals"))
         self.checkBoxSigned.setText(_translate("WriteRegDialog", "Signed"))

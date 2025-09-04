@@ -3,20 +3,50 @@ import sys
 from threading import Thread
 from typing import List
 
+from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog, QListView
 
 from ui.main_window import Ui_MainWindow
 from ui.params_dialog import Ui_ParamsDialog
-from ui.params_dialog_2 import Ui_ParamsDialog_2
-from ui.params_dialog_3 import Ui_ParamsDialog_3
-from ui.params_dialog_4 import Ui_ParamsDialog_4
 from ui.write_single_dialog import Ui_WriteRegDialog
-from ui.write_single_dialog_2 import Ui_WriteRegDialog_2
-from ui.write_single_dialog_3 import Ui_WriteRegDialog_3
-from ui.write_single_dialog_4 import Ui_WriteRegDialog_4
-from visual_model import VisualModel
+from visual_model import v_model
 
+
+class CustomListModel(QAbstractListModel):
+    def __init__(self, data=None, parent=None):
+        super().__init__(parent)
+        self._data = data or []
+
+    def rowCount(self, parent=QModelIndex()):
+        return len(self._data)
+
+    def data(self, index, role=Qt.DisplayRole):
+        if not index.isValid() or not (0 <= index.row() < len(self._data)):
+            return None
+
+        if role == Qt.DisplayRole:
+            return self._data[index.row()]
+
+        return None
+
+    def setData(self, index, value, role=Qt.EditRole):
+        if not index.isValid() or not (0 <= index.row() < len(self._data)):
+            return False
+
+        if role == Qt.EditRole:
+            self._data[index.row()] = value
+            # Important: emit signal dataChanged on data change
+            self.dataChanged.emit(index, index, role)
+            return True
+
+        return False
+
+    def flags(self, index):
+        if not index.isValid():
+            return Qt.NoItemFlags
+        # Set elements editable
+        return super().flags(index) | Qt.ItemIsEditable
 
 class MainWindow(QMainWindow):
     """
@@ -26,9 +56,7 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # основные переменные
-        self.name = 'ClientMainWindow'
-        self.v_model = VisualModel()
-        # self.v_model.connect_port()
+        self.name = 'ModbusMainWindow'
         self.ui_dict = {}
 
         self.InitUI()
@@ -38,7 +66,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.pushButtonConnect.clicked.connect(self.v_model.create_slaves)
+        self.ui.pushButtonConnect.clicked.connect(v_model.create_slaves)
 
         self.ui.pushButtonStartPolling.clicked.connect(self.start_polling)
         self.ui.pushButtonStopPolling.clicked.connect(self.stop_polling)
@@ -56,6 +84,8 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonWriteReg_3.clicked.connect(self.open_write_dialog_3)
         self.ui.pushButtonWriteReg_4.clicked.connect(self.open_write_dialog_4)
 
+        self.ui.pushButtonConnect.clicked.connect(self.create_client)
+
         self.ui.pushButtonLoadParams.setEnabled(False)
         self.ui.pushButtonStopPolling.setEnabled(False)
 
@@ -66,25 +96,45 @@ class MainWindow(QMainWindow):
             "slave4": self.ui.pushButtonWriteReg_4,
         }
 
-        self.check_slave_availability(self.v_model.slave1, "slave1")
-        self.check_slave_availability(self.v_model.slave2, "slave2")
-        self.check_slave_availability(self.v_model.slave3, "slave3")
-        self.check_slave_availability(self.v_model.slave4, "slave4")
+        self.check_start_button_availability()
+        self.check_main_client_availability()
 
         self.show()
 
-    def check_slave_availability(self, slave, slave_name):
-        if slave.err:
+    def create_client(self):
+        v_model.create_client(self)
+        self.check_main_client_availability()
+
+    def check_main_client_availability(self):
+        if v_model.client is not None:
+            self.ui.pushButtonStartPolling.setEnabled(True)
+            if not v_model.client.connected:
+                self.ui.pushButtonStartPolling.setEnabled(False)
+                self.ui.pushButtonConnect.setEnabled(True)
+            else:
+                self.ui.pushButtonConnect.setEnabled(False)
+        else:
             self.ui.pushButtonStartPolling.setEnabled(False)
-            self.ui_dict.get(slave_name).setEnabled(False)
-            self.ui.LabelMessage.setText(slave.err)
+            self.ui.pushButtonConnect.setEnabled(True)
+
+    # def check_slave_availability(self, slave, slave_name):
+    #     if slave.err:
+    #         self.ui.pushButtonStartPolling.setEnabled(False)
+    #         self.ui_dict.get(slave_name).setEnabled(False)
+    #     else:
+    #         self.ui_dict.get(slave_name).setEnabled(True)
+
+    def check_start_button_availability(self):
+        if v_model.running_read.is_set():
+            self.ui.pushButtonStartPolling.setEnabled(False)
+            self.ui.pushButtonStopPolling.setEnabled(True)
         else:
             self.ui.pushButtonStartPolling.setEnabled(True)
-            self.ui_dict.get(slave_name).setEnabled(True)
+            self.ui.pushButtonStopPolling.setEnabled(False)
 
     def closeEvent(self, event) -> None:
         """Закрытие всех окон по выходу из главного"""
-        self.v_model.running_read.clear()
+        v_model.running_read.clear()
         os.sys.exit(0)
 
     def open_json_dialog(self):
@@ -104,105 +154,82 @@ class MainWindow(QMainWindow):
             self.ui.LabelMessage_5.setText("Выберите JSON файл")
 
     def load_json_params(self):
-        self.v_model.load_json_params(self.json_path)
+        v_model.load_json_params(self.json_path)
 
         self.ui.pushButtonStartPolling.setEnabled(True)
         self.ui.LabelMessage_5.setText("Параметры загружены")
 
     def open_params_dialog_1(self):
         try:
-            dialog = Ui_ParamsDialog(self)
+            dialog = Ui_ParamsDialog(v_model.slave1, self)
             dialog.exec()  # Открывает диалог модально
         except Exception as err:
             print(err)
 
     def open_params_dialog_2(self):
         try:
-            dialog = Ui_ParamsDialog_2(self)
+            dialog = Ui_ParamsDialog(v_model.slave2, self)
             dialog.exec()
         except Exception as err:
             print(err)
 
     def open_params_dialog_3(self):
         try:
-            dialog = Ui_ParamsDialog_3(self)
+            dialog = Ui_ParamsDialog(v_model.slave3, self)
             dialog.exec()
         except Exception as err:
             print(err)
 
     def open_params_dialog_4(self):
         try:
-            dialog = Ui_ParamsDialog_4(self)
+            dialog = Ui_ParamsDialog(v_model.slave4, self)
             dialog.exec()
         except Exception as err:
             print(err)
 
     def open_write_dialog_1(self):
-        dialog = Ui_WriteRegDialog(self)
+        dialog = Ui_WriteRegDialog(v_model.slave1, self)
         dialog.exec()  # Открывает диалог модально
 
     def open_write_dialog_2(self):
-        dialog = Ui_WriteRegDialog_2(self)
+        dialog = Ui_WriteRegDialog(v_model.slave2, self)
         dialog.exec()
 
     def open_write_dialog_3(self):
-        dialog = Ui_WriteRegDialog_3(self)
+        dialog = Ui_WriteRegDialog(v_model.slave3, self)
         dialog.exec()
 
     def open_write_dialog_4(self):
-        dialog = Ui_WriteRegDialog_4(self)
+        dialog = Ui_WriteRegDialog(v_model.slave4, self)
         dialog.exec()
 
     def start_polling(self):
-        self.v_model.start_polling()
+        v_model.start_polling()
 
         self.ui.pushButtonStartPolling.setEnabled(False)
         self.ui.pushButtonStopPolling.setEnabled(True)
 
-        # ui_items_list.model().layoutChanged.emit()
-        # self.ui.ReadRegisters_2.model().dataChanged.connect(self.on_data_changed)
-        self.on_data_changed()
+        read_thread = Thread(target=self.start_reading_thread,
+                             name="reading Thread")
+        read_thread.start()
 
-    def on_data_changed(self):
-        self.read_registers_list_update()
-        self.read_registers_list_update_2()
-        self.read_registers_list_update_3()
-        self.read_registers_list_update_4()
+    def start_reading_thread(self):
+        v_model.reading_thread(self)
 
     def write_register(self):
-        try:
-            self.v_model.slave1.write()
-
-            self.ui.LabelMessage.setText("Запись в slave 1 успешно произведена")
-        except Exception as err:
-            self.ui.LabelMessage.setText(str(err))
+        self.slave.write(self.ui.LabelMessage)
 
     def write_register_2(self):
-        try:
-            self.v_model.slave2.write()
-
-            self.ui.LabelMessage_2.setText("Запись в slave 2 успешно произведена")
-        except Exception as err:
-            self.ui.LabelMessage_2.setText(str(err))
+        v_model.slave2.write(self.ui.LabelMessage_2)
 
     def write_register_3(self):
-        try:
-            self.v_model.slave3.write()
-
-            self.ui.LabelMessage_3.setText("Запись в slave 3 успешно произведена")
-        except Exception as err:
-            self.ui.LabelMessage_3.setText(str(err))
+        v_model.slave3.write(self.ui.LabelMessage_3)
 
     def write_register_4(self):
-        try:
-            self.v_model.slave4.write()
-
-            self.ui.LabelMessage_4.setText("Запись в slave 4 успешно произведена")
-        except Exception as err:
-            self.ui.LabelMessage_4.setText(str(err))
+        v_model.slave4.write(self.ui.LabelMessage_4)
 
     def stop_polling(self):
-        self.v_model.stop_polling()
+        v_model.stop_polling()
 
         self.ui.pushButtonStartPolling.setEnabled(True)
         self.ui.pushButtonStopPolling.setEnabled(False)
@@ -210,7 +237,7 @@ class MainWindow(QMainWindow):
     def universal_list_update(self,
                               regs_list: List,
                               ui_items_list: QListView) -> None:
-        """Метод обновляющий список чего-нибудь."""
+        """Метод обновляющий список QListView."""
         items_model = QStandardItemModel()
         for i in regs_list:
             item = QStandardItem(str(i))
@@ -221,25 +248,25 @@ class MainWindow(QMainWindow):
     def read_registers_list_update(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            self.v_model.slave1.data,
+            v_model.slave1.data.registers,
             self.ui.ReadRegisters)
 
     def read_registers_list_update_2(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            self.v_model.slave2.data,
+            v_model.slave2.data.registers,
             self.ui.ReadRegisters_2)
 
     def read_registers_list_update_3(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            self.v_model.slave3.data,
+            v_model.slave3.data.registers,
             self.ui.ReadRegisters_3)
 
     def read_registers_list_update_4(self) -> None:
         """Обновление регистров на чтение"""
         self.universal_list_update(
-            self.v_model.slave4.data,
+            v_model.slave4.data.registers,
             self.ui.ReadRegisters_4)
 
 
