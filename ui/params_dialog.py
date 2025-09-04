@@ -11,15 +11,13 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtWidgets import QDialog
 
-from settings import FUNCTION_LIST_READ
-from slave_classes import SlaveEncoder
-
 
 class Ui_ParamsDialog(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, slave, parent=None):
         super().__init__(parent)
 
         self.parent = parent
+        self.slave = slave
 
         self.setFixedSize(400, 180)
         self.setWindowTitle('Parameters')
@@ -29,14 +27,6 @@ class Ui_ParamsDialog(QDialog):
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel | QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.label_7 = QtWidgets.QLabel(self)
-        self.label_7.setGeometry(QtCore.QRect(30, 110, 61, 21))
-        self.label_7.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
-        self.label_7.setWordWrap(True)
-        self.label_7.setObjectName("label_7")
-        self.comboFunctionCode = QtWidgets.QComboBox(self)
-        self.comboFunctionCode.setGeometry(QtCore.QRect(100, 110, 221, 22))
-        self.comboFunctionCode.setObjectName("comboFunctionCode")
         self.SlaveID = QtWidgets.QTextEdit(self)
         self.SlaveID.setGeometry(QtCore.QRect(100, 20, 61, 21))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
@@ -79,36 +69,22 @@ class Ui_ParamsDialog(QDialog):
         self.buttonBox.rejected.connect(self.reject)
         self.buttonBox.accepted.connect(self.accept)
 
-        self.StartRegister.setText(str(self.parent.slave1.params["registeraddress"]))
-        self.SlaveID.setText(str(self.parent.slave1.params["slave_id"]))
-        self.Quantity.setText(str(self.parent.slave1.params["number_of_registers"]))
-
-        self.update_combobox()
+        self.StartRegister.setText(str(self.slave.params["registeraddress"]))
+        self.SlaveID.setText(str(self.slave.params["slave_id"]))
+        self.Quantity.setText(str(self.slave.params["number_of_registers"]))
 
     def set_params(self):
-        self.parent.slave1.params['slave_id'] = int(self.SlaveID.toPlainText())
-        self.parent.slave1.params['registeraddress'] = int(self.StartRegister.toPlainText())
-        self.parent.slave1.params['number_of_registers'] = int(self.Quantity.toPlainText())
+        self.slave.params['slave_id'] = int(self.SlaveID.toPlainText())
+        self.slave.params['registeraddress'] = int(self.StartRegister.toPlainText())
+        self.slave.params['number_of_registers'] = int(self.Quantity.toPlainText())
 
-        selected_func = self.comboFunctionCode.currentIndex() + 1
-        self.parent.slave1.params['functioncode'] = selected_func
-
-        for key, val in self.parent.slave1.params.items():
+        for key, val in self.slave.params.items():
             print(key, val)
         print()
 
-    def update_combobox(self) -> None:
-        """Обновление комбо-бокса"""
-        self.parent.universal_list_update(
-            FUNCTION_LIST_READ,
-            self.comboFunctionCode)
-
-        self.comboFunctionCode.setCurrentIndex(2)
-
     def retranslateUi(self, ParamsDialog):
         _translate = QtCore.QCoreApplication.translate
-        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Slave 1 parameters"))
-        self.label_7.setText(_translate("ParamsDialog", "Func Code"))
+        ParamsDialog.setWindowTitle(_translate("ParamsDialog", "Slave 2 parameters"))
         self.label.setText(_translate("ParamsDialog", "Slave ID"))
         self.label_6.setText(_translate("ParamsDialog", "Quantity"))
         self.label_5.setText(_translate("ParamsDialog", "Start reg"))
