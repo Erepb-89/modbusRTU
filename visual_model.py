@@ -11,7 +11,6 @@ from slave_classes import SlaveEncoder
 class VisualModel:
     def __init__(self):
         self.running_read = Event()
-        self.client = None
         self.create_client()
         self.create_slaves()
 

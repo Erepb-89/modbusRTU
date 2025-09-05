@@ -48,16 +48,16 @@ class CustomListModel(QAbstractListModel):
         # Set elements editable
         return super().flags(index) | Qt.ItemIsEditable
 
+
 class MainWindow(QMainWindow):
     """
     Класс - основное окно пользователя.
     """
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent=None)
         # основные переменные
-        self.name = 'ModbusMainWindow'
-        self.ui_dict = {}
+        self.parent = parent
 
         self.InitUI()
 
@@ -89,13 +89,6 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonLoadParams.setEnabled(False)
         self.ui.pushButtonStopPolling.setEnabled(False)
 
-        self.ui_dict = {
-            "slave1": self.ui.pushButtonWriteReg,
-            "slave2": self.ui.pushButtonWriteReg_2,
-            "slave3": self.ui.pushButtonWriteReg_3,
-            "slave4": self.ui.pushButtonWriteReg_4,
-        }
-
         self.check_start_button_availability()
         self.check_main_client_availability()
 
@@ -117,25 +110,33 @@ class MainWindow(QMainWindow):
             self.ui.pushButtonStartPolling.setEnabled(False)
             self.ui.pushButtonConnect.setEnabled(True)
 
-    # def check_slave_availability(self, slave, slave_name):
-    #     if slave.err:
-    #         self.ui.pushButtonStartPolling.setEnabled(False)
-    #         self.ui_dict.get(slave_name).setEnabled(False)
-    #     else:
-    #         self.ui_dict.get(slave_name).setEnabled(True)
-
     def check_start_button_availability(self):
         if v_model.running_read.is_set():
             self.ui.pushButtonStartPolling.setEnabled(False)
             self.ui.pushButtonStopPolling.setEnabled(True)
+
+            self.update_read_data()
         else:
             self.ui.pushButtonStartPolling.setEnabled(True)
             self.ui.pushButtonStopPolling.setEnabled(False)
 
-    def closeEvent(self, event) -> None:
-        """Закрытие всех окон по выходу из главного"""
-        v_model.running_read.clear()
-        os.sys.exit(0)
+    def update_read_data(self):
+        try:
+            self.read_registers_list_update()
+        except Exception as err:
+            print(err)
+        try:
+            self.read_registers_list_update_2()
+        except Exception as err:
+            print(err)
+        try:
+            self.read_registers_list_update_3()
+        except Exception as err:
+            print(err)
+        try:
+            self.read_registers_list_update_4()
+        except Exception as err:
+            print(err)
 
     def open_json_dialog(self):
         """Кнопка Открыть (для поиска JSON-файла)"""
@@ -269,8 +270,13 @@ class MainWindow(QMainWindow):
             v_model.slave4.data.registers,
             self.ui.ReadRegisters_4)
 
+    def closeEvent(self, event) -> None:
+        """Закрытие всех окон по выходу из главного"""
+        v_model.running_read.clear()
+        os.sys.exit(0)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = MainWindow()
+    ex = MainWindow(None)
     sys.exit(app.exec_())
