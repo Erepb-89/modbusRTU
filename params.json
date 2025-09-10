@@ -1,5 +1,6 @@
 {
   "1": {
+    "chosen_slave": 1,
     "slave_id": 1,
     "registeraddress": 0,
     "number_of_registers": 10,
@@ -11,6 +12,7 @@
     "timeout": 0.5
   },
   "2": {
+    "chosen_slave": 1,
     "slave_id": 2,
     "registeraddress": 100,
     "number_of_registers": 4,
@@ -22,6 +24,7 @@
     "timeout": 0.5
   },
   "3": {
+    "chosen_slave": 0,
     "slave_id": 3,
     "registeraddress": 5,
     "number_of_registers": 4,
@@ -33,6 +36,7 @@
     "timeout": 0.5
   },
   "4": {
+    "chosen_slave": 0,
     "slave_id": 4,
     "registeraddress": 1,
     "number_of_registers": 14,
