@@ -1,4 +1,3 @@
-import os
 import sys
 from threading import Thread
 from typing import List
@@ -42,12 +41,6 @@ class CustomListModel(QAbstractListModel):
 
         return False
 
-    def flags(self, index):
-        if not index.isValid():
-            return Qt.NoItemFlags
-        # Set elements editable
-        return super().flags(index) | Qt.ItemIsEditable
-
 
 class MainWindow(QMainWindow):
     """
@@ -60,6 +53,8 @@ class MainWindow(QMainWindow):
         self.parent = parent
 
         self.InitUI()
+
+        # self.items_model.dataChanged.connect(self.update_read_data)
 
     def InitUI(self):
         """Загружаем конфигурацию окна из дизайнера"""
@@ -74,10 +69,14 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonChooseJSON.clicked.connect(self.open_json_dialog)
         self.ui.pushButtonLoadParams.clicked.connect(self.load_json_params)
 
-        self.ui.pushButtonSlave1Settings.clicked.connect(self.open_params_dialog_1)
-        self.ui.pushButtonSlave2Settings.clicked.connect(self.open_params_dialog_2)
-        self.ui.pushButtonSlave3Settings.clicked.connect(self.open_params_dialog_3)
-        self.ui.pushButtonSlave4Settings.clicked.connect(self.open_params_dialog_4)
+        self.ui.pushButtonSlave1Settings.clicked.connect(
+            self.open_params_dialog_1)
+        self.ui.pushButtonSlave2Settings.clicked.connect(
+            self.open_params_dialog_2)
+        self.ui.pushButtonSlave3Settings.clicked.connect(
+            self.open_params_dialog_3)
+        self.ui.pushButtonSlave4Settings.clicked.connect(
+            self.open_params_dialog_4)
 
         self.ui.pushButtonWriteReg.clicked.connect(self.open_write_dialog_1)
         self.ui.pushButtonWriteReg_2.clicked.connect(self.open_write_dialog_2)
@@ -92,7 +91,29 @@ class MainWindow(QMainWindow):
         self.check_start_button_availability()
         self.check_main_client_availability()
 
+        self.ui.checkBoxPolling.setChecked(v_model.chosen_slave_1)
+        self.ui.checkBoxPolling_2.setChecked(v_model.chosen_slave_2)
+        self.ui.checkBoxPolling_3.setChecked(v_model.chosen_slave_3)
+        self.ui.checkBoxPolling_4.setChecked(v_model.chosen_slave_4)
+
+        self.ui.checkBoxPolling.stateChanged.connect(self.checkbox_polling)
+        self.ui.checkBoxPolling_2.stateChanged.connect(self.checkbox_polling_2)
+        self.ui.checkBoxPolling_3.stateChanged.connect(self.checkbox_polling_3)
+        self.ui.checkBoxPolling_4.stateChanged.connect(self.checkbox_polling_4)
+
         self.show()
+
+    def checkbox_polling(self):
+        v_model.chosen_slave_1 = True if self.ui.checkBoxPolling.isChecked() else False
+
+    def checkbox_polling_2(self):
+        v_model.chosen_slave_2 = True if self.ui.checkBoxPolling_2.isChecked() else False
+
+    def checkbox_polling_3(self):
+        v_model.chosen_slave_3 = True if self.ui.checkBoxPolling_3.isChecked() else False
+
+    def checkbox_polling_4(self):
+        v_model.chosen_slave_4 = True if self.ui.checkBoxPolling_4.isChecked() else False
 
     def create_client(self):
         v_model.create_client(self)
@@ -100,7 +121,7 @@ class MainWindow(QMainWindow):
 
     def check_main_client_availability(self):
         if v_model.client is not None:
-            self.ui.pushButtonStartPolling.setEnabled(True)
+            # self.ui.pushButtonStartPolling.setEnabled(True)
             if not v_model.client.connected:
                 self.ui.pushButtonStartPolling.setEnabled(False)
                 self.ui.pushButtonConnect.setEnabled(True)
@@ -210,13 +231,6 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonStartPolling.setEnabled(False)
         self.ui.pushButtonStopPolling.setEnabled(True)
 
-        read_thread = Thread(target=self.start_reading_thread,
-                             name="reading Thread")
-        read_thread.start()
-
-    def start_reading_thread(self):
-        v_model.reading_thread(self)
-
     def write_register(self):
         self.slave.write(self.ui.LabelMessage)
 
@@ -270,10 +284,10 @@ class MainWindow(QMainWindow):
             v_model.slave4.data.registers,
             self.ui.ReadRegisters_4)
 
-    def closeEvent(self, event) -> None:
-        """Закрытие всех окон по выходу из главного"""
-        v_model.running_read.clear()
-        os.sys.exit(0)
+    # def closeEvent(self, event) -> None:
+    #     """Закрытие всех окон по выходу из главного"""
+    #     v_model.running_read.clear()
+    #     os.sys.exit(0)
 
 
 if __name__ == '__main__':

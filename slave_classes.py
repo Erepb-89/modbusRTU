@@ -56,7 +56,8 @@ class SlaveEncoder(ParentSlave):
         self.client.comm_params.timeout_connect = self.params.get('timeout')
         self.client.comm_params.comm_type = minimalmodbus.MODE_RTU
 
-    def read(self, label_message):
+    # def read(self, label_message):
+    def read(self):
         self.get_actual_params()
 
         try:
@@ -67,7 +68,7 @@ class SlaveEncoder(ParentSlave):
 
             if self.data.isError():
                 print(f"Ошибка чтения: {self.data.exception_code}")
-                label_message.setText(f"Ошибка чтения: {self.data.exception_code}")
+                # label_message.setText(f"Ошибка чтения: {self.data.exception_code}")
             else:
                 print(f"Успешно прочитано: {self.data.registers}")
                 print(f"Значение первого регистра: {self.data.registers[0]}")
@@ -80,10 +81,10 @@ class SlaveEncoder(ParentSlave):
 
         except ModbusException as e:
             print(f"Произошла ошибка Modbus: {e}")
-            label_message.setText(f"Произошла ошибка Modbus: {e}")
+            # label_message.setText(f"Произошла ошибка Modbus: {e}")
         except Exception as e:
             print(f"Произошла другая ошибка: {e}")
-            label_message.setText(f"Произошла другая ошибка: {e}")
+            # label_message.setText(f"Произошла другая ошибка: {e}")
 
     def write(self, label_message):
         self.get_actual_params()
